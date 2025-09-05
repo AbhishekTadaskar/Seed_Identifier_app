@@ -59,7 +59,7 @@ for feat in feature_names:
 st.title("🌱 Seed Identifier App By AbhishekCoding 😎")
 st.markdown("This app predicts whether a seed is **Çerçevelik (1)** or **Ürgüp Sivrisi (0)**.")
 
-st.subheader("📊 Enter Seed Features")
+st.subheader("📊 Enter All 7 Seed Features")
 
 # Create columns for a clean layout
 cols = st.columns(3)
@@ -73,16 +73,20 @@ for i, (name, val) in enumerate(zip(feature_names, default_values)):
 # -----------------------
 # Automatic Prediction Logic
 # -----------------------
+# Count how many features have been entered (non-zero values)
 filled_features = [val for val in manual_inputs if val != 0]
 
 if len(filled_features) >= 4 and model is not None:
     try:
+        # Always use all 7 features for prediction
         inputs = np.array(manual_inputs).reshape(1, -1)
         prediction = model.predict(inputs)[0]
         label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
+        
         st.markdown("---")
         st.success(f"✅ Predicted Seed Type: **{label}**")
+        
     except Exception as e:
         st.error(f"⚠️ Prediction failed: {e}")
 else:
-    st.info("👉 Please enter at least **4 features** to get a prediction.")
+    st.info("👉 Please enter values for at least **4 features** to get a prediction.")
