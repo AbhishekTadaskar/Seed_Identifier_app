@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 import os
 
-st.set_page_config(page_title="Seed Identifier", layout="centered")
+st.set_page_config(page_title="Seed Identifier", layout="wide")
 
 st.title("🌱 Seed Identifier App By AbhishekCoding 😎")
 st.write("This app predicts whether a seed is **Çerçevelik (1)** or **Ürgüp Sivrisi (0)**")
@@ -23,37 +23,44 @@ model = load_model()
 
 if model is not None:
     # -----------------------
-    # Input fields
+    # Feature names & defaults
     # -----------------------
-    st.subheader("📊 Enter Seed Features:")
+    feature_names = [
+        "Area", "Perimeter", "Compactness", "Length of Kernel",
+        "Width of Kernel", "Asymmetry Coefficient", "Length of Kernel Groove"
+    ]
 
-    area = st.number_input("Area", min_value=0.0, step=0.1)
-    perimeter = st.number_input("Perimeter", min_value=0.0, step=0.1)
-    compactness = st.number_input("Compactness", min_value=0.0, step=0.001, format="%.4f")
-    length_of_kernel = st.number_input("Length of Kernel", min_value=0.0, step=0.1)
-    width_of_kernel = st.number_input("Width of Kernel", min_value=0.0, step=0.1)
-    asymmetry_coefficient = st.number_input("Asymmetry Coefficient", min_value=0.0, step=0.1)
-    length_of_kernel_groove = st.number_input("Length of Kernel Groove", min_value=0.0, step=0.1)
+    default_values = [15.0, 14.5, 0.87, 5.5, 3.3, 2.0, 5.0]
+
+    st.sidebar.header("📊 Input Features")
+
+    # Manual input fields
+    manual_inputs = []
+    for name, val in zip(feature_names, default_values):
+        user_val = st.sidebar.number_input(f"{name}", value=val)
+        manual_inputs.append(user_val)
 
     # -----------------------
-    # Predict button
+    # Prediction buttons
     # -----------------------
-    if st.button("🔍 Predict Seed Type"):
-        features = np.array([[area, perimeter, compactness,
-                              length_of_kernel, width_of_kernel,
-                              asymmetry_coefficient, length_of_kernel_groove]])
-        
-        try:
-            prediction = model.predict(features)[0]
-            label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
-            
-            st.success(f"✅ Predicted Seed Type: **{label}**")
+    col1, col2 = st.columns(2)
 
-            # Show probability if available
-            if hasattr(model, "predict_proba"):
-                probs = model.predict_proba(features)[0]
-                st.write("### 📊 Prediction Probabilities")
-                st.write(f"- Çerçevelik (1): {probs[1]:.2f}")
-                st.write(f"- Ürgüp Sivrisi (0): {probs[0]:.2f}")
-        except Exception as e:
-            st.error(f"⚠️ Prediction failed: {e}")
+    with col1:
+        if st.button("🔍 Predict with Default Parameters"):
+            inputs = np.array(default_values).reshape(1, -1)
+            try:
+                prediction = model.predict(inputs)[0]
+                label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
+                st.success(f"✅ Predicted Seed Type (Default): **{label}**")
+            except Exception as e:
+                st.error(f"⚠️ Prediction failed: {e}")
+
+    with col2:
+        if st.button("📝 Predict with Manual Inputs"):
+            inputs = np.array(manual_inputs).reshape(1, -1)
+            try:
+                prediction = model.predict(inputs)[0]
+                label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
+                st.success(f"✅ Predicted Seed Type (Manual): **{label}**")
+            except Exception as e:
+                st.error(f"⚠️ Prediction failed: {e}")
