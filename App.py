@@ -71,27 +71,18 @@ for i, (name, val) in enumerate(zip(feature_names, default_values)):
     manual_inputs.append(user_val)
 
 # -----------------------
-# Prediction Buttons
+# Automatic Prediction Logic
 # -----------------------
-st.markdown("---")
-col1, col2 = st.columns(2)
+filled_features = [val for val in manual_inputs if val != 0]
 
-with col1:
-    if st.button("🔍 Predict with Default Parameters"):
-        inputs = np.array(default_values).reshape(1, -1)
-        try:
-            prediction = model.predict(inputs)[0]
-            label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
-            st.success(f"✅ Predicted Seed Type (Default): **{label}**")
-        except Exception as e:
-            st.error(f"⚠️ Prediction failed: {e}")
-
-with col2:
-    if st.button("📝 Predict with Manual Inputs"):
+if len(filled_features) >= 4:
+    try:
         inputs = np.array(manual_inputs).reshape(1, -1)
-        try:
-            prediction = model.predict(inputs)[0]
-            label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
-            st.success(f"✅ Predicted Seed Type (Manual): **{label}**")
-        except Exception as e:
-            st.error(f"⚠️ Prediction failed: {e}")
+        prediction = model.predict(inputs)[0]
+        label = "Çerçevelik (1)" if prediction == 1 else "Ürgüp Sivrisi (0)"
+        st.markdown("---")
+        st.success(f"✅ Predicted Seed Type: **{label}**")
+    except Exception as e:
+        st.error(f"⚠️ Prediction failed: {e}")
+else:
+    st.warning("👉 Please enter at least **4 features** to get a prediction.")
