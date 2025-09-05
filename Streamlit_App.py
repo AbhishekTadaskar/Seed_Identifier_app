@@ -6,7 +6,7 @@ import numpy as np
 # Load Model
 # -----------------------
 with open("Seed_Identifer.pkl", "rb") as f:
-    model = pickle.load(f)
+    load_data = pickle.load(f)
 
 st.set_page_config(page_title="Seed Identifier", layout="wide")
 
