@@ -12,7 +12,7 @@ st.set_page_config(page_title="Seed Identifier", layout="wide")
 # Load Model
 # -----------------------
 def load_model():
-    model_path = "Seed_Identifer.pkl"
+    model_path = "Seed_Identifer.pkl"   # <-- your uploaded model
     if not os.path.exists(model_path):
         st.error(f"❌ Model file not found: {model_path}")
         return None
@@ -75,7 +75,7 @@ for i, (name, val) in enumerate(zip(feature_names, default_values)):
 # -----------------------
 filled_features = [val for val in manual_inputs if val != 0]
 
-if len(filled_features) >= 4:
+if len(filled_features) >= 4 and model is not None:
     try:
         inputs = np.array(manual_inputs).reshape(1, -1)
         prediction = model.predict(inputs)[0]
@@ -85,4 +85,4 @@ if len(filled_features) >= 4:
     except Exception as e:
         st.error(f"⚠️ Prediction failed: {e}")
 else:
-    st.warning("👉 Please enter at least **4 features** to get a prediction.")
+    st.info("👉 Please enter at least **4 features** to get a prediction.")
