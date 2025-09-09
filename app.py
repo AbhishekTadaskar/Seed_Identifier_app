@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 
 # Load the saved Pumpkin Seed model
-MODEL_PATH = "/mnt/data/Pumpkin_seed_model.pkl"
+MODEL_PATH = "Pumpkin_seed_model.pkl"
 
 with open(MODEL_PATH, "rb") as f:
     model = pickle.load(f)
