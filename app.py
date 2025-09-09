@@ -11,7 +11,7 @@ import io
 st.set_page_config(page_title="Seed Identifier", layout="centered")
 st.title("Seed Identifier — Predict seed class from shape features")
 
-MODEL_PATH = "Pumpkin_seed_model.pkl"
+MODEL_PATH = "Seed_Identifer.pkl"
 
 @st.cache_resource
 def load_model(path=MODEL_PATH):
